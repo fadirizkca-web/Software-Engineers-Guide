@@ -1,176 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - DevRoadmap</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - DevRoadmap 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-gray-50 text-slate-900">
-  <div class="min-h-screen flex">
-    
-    <aside class="w-64 bg-slate-900 text-white p-6 hidden md:block">
-      <div class="flex items-center gap-2 mb-10">
-        <i data-lucide="shield-check" class="text-blue-400"></i>
-        <span class="font-bold text-xl">Admin Control</span>
-      </div>
-      <nav class="space-y-4">
-        <button onclick="switchAdminTab('content')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-2">
-          <i data-lucide="book-open" class="h-4 w-4"></i> Roadmap Content
-        </button>
-        <button onclick="switchAdminTab('users')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-2">
-          <i data-lucide="users" class="h-4 w-4"></i> User Management
-        </button>
-        <hr class="border-slate-800">
-        <button onclick="logout()" class="w-full text-left p-3 rounded text-red-400 hover:bg-red-900/20 flex items-center gap-2">
-          <i data-lucide="log-out" class="h-4 w-4"></i> Logout
-        </button>
-      </nav>
-    </aside>
+<body class="bg-slate-50 text-slate-900 font-sans">
 
-    <main class="flex-1 p-8 overflow-y-auto">
-      <header class="flex justify-between items-center mb-8">
-        <h1 id="admin-title" class="text-2xl font-bold">Roadmap Content Management</h1>
-        <button onclick="location.reload()" class="p-2 bg-white border rounded shadow-sm hover:bg-gray-50">
-          <i data-lucide="refresh-cw" class="h-4 w-4"></i>
-        </button>
-      </header>
+    <nav class="bg-white border-b sticky top-0 z-50 p-4 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 p-2 rounded-lg">
+                    <i data-lucide="shield-check" class="text-white h-5 w-5"></i>
+                </div>
+                <span class="font-black text-xl tracking-tight">ADMIN<span class="text-blue-600">CORE</span></span>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="logout()" class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-red-50 hover:text-red-600 rounded-lg font-bold text-sm transition-all">
+                    <i data-lucide="log-out" class="h-4 w-4"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
 
-      <section id="pane-content" class="space-y-6">
-        <div class="bg-blue-600 text-white p-4 rounded-lg flex justify-between items-center">
-          <p class="text-sm font-medium">Add a new skill or tool to the global database.</p>
-          <button onclick="addPathEntry()" class="bg-white text-blue-600 px-4 py-2 rounded-md font-bold text-sm">
-            + Add New Entry
-          </button>
+    <main class="max-w-7xl mx-auto py-10 px-4">
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-xs font-black text-slate-400 uppercase mb-1">Active Languages</p>
+                <h3 class="text-3xl font-black text-slate-900" id="stat-lang-count">0</h3>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-xs font-black text-slate-400 uppercase mb-1">Total Users</p>
+                <h3 class="text-3xl font-black text-slate-900" id="stat-user-count">0</h3>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <p class="text-xs font-black text-slate-400 uppercase mb-1">System Health</p>
+                <h3 class="text-3xl font-black text-emerald-500">OPTIMAL</h3>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-4" id="content-list">
-          </div>
-      </section>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-8">
+                <section class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+                        <i data-lucide="plus-circle" class="text-blue-600"></i>
+                        Inject New Language Track
+                    </h2>
 
-      <section id="pane-users" class="hidden space-y-6">
-        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-          <table class="w-full text-left">
-            <thead class="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th class="p-4 text-xs font-bold uppercase text-gray-500">Name</th>
-                <th class="p-4 text-xs font-bold uppercase text-gray-500">Email</th>
-                <th class="p-4 text-xs font-bold uppercase text-gray-500">Role</th>
-                <th class="p-4 text-xs font-bold uppercase text-gray-500 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="user-table-body" class="divide-y divide-gray-100">
-              </tbody>
-          </table>
+                    <form id="add-lang-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-1">
+                            <label class="block text-xs font-black uppercase text-slate-400 mb-2">Language Name</label>
+                            <input id="new-lang-name" type="text" placeholder="e.g. Rust or Ruby" required
+                                class="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition">
+                        </div>
+
+                        <div class="md:col-span-1">
+                            <label class="block text-xs font-black uppercase text-slate-400 mb-2">Track Type</label>
+                            <select id="new-lang-track" class="w-full p-3 rounded-xl border border-slate-200 outline-none cursor-pointer">
+                                <option value="backend">Backend</option>
+                                <option value="frontend">Frontend</option>
+                                <option value="fullstack">Full Stack</option>
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-black uppercase text-slate-400 mb-2">Seniority Level</label>
+                            <div class="flex gap-4">
+                                <label class="flex-1"><input type="radio" name="level" value="junior" checked> Junior</label>
+                                <label class="flex-1"><input type="radio" name="level" value="mid"> Mid</label>
+                                <label class="flex-1"><input type="radio" name="level" value="senior"> Senior</label>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-black uppercase text-slate-400 mb-2">Curriculum Topics (Comma Separated)</label>
+                            <textarea id="new-lang-topics" placeholder="Memory Management, Cargo, Ownership..." required
+                                class="w-full p-3 rounded-xl border border-slate-200 h-24 focus:ring-2 focus:ring-blue-600 outline-none"></textarea>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-black uppercase text-slate-400 mb-2">Required Tools (Comma Separated)</label>
+                            <input id="new-lang-tools" type="text" placeholder="Rustup, VS Code, Git..." required
+                                class="w-full p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none">
+                        </div>
+
+                        <button type="submit" class="md:col-span-2 bg-slate-900 text-white font-black py-4 rounded-xl hover:bg-blue-600 transition-all shadow-lg active:scale-[0.98]">
+                            PUBLISH TO ROADMAP ENGINE
+                        </button>
+                    </form>
+                </section>
+            </div>
+
+            <div class="space-y-8">
+                <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-lg font-black mb-4">Data Management</h2>
+                    <div class="space-y-3">
+                        <button onclick="refreshStats()" class="w-full text-left p-3 rounded-lg hover:bg-slate-50 flex items-center justify-between border border-slate-100">
+                            <span class="text-sm font-bold">Refresh Database Stats</span>
+                            <i data-lucide="refresh-cw" class="h-4 w-4"></i>
+                        </button>
+                        <button onclick="resetDB()" class="w-full text-left p-3 rounded-lg hover:bg-red-50 text-red-600 flex items-center justify-between border border-red-100">
+                            <span class="text-sm font-bold">Reset to Defaults</span>
+                            <i data-lucide="trash-2" class="h-4 w-4"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="bg-blue-600 p-6 rounded-2xl shadow-lg text-white">
+                    <h2 class="text-lg font-black mb-2">Admin Tip</h2>
+                    <p class="text-sm opacity-90 leading-relaxed">
+                        When adding a new language, remember to add data for all three levels (Junior, Mid, Senior) to ensure a complete user experience.
+                    </p>
+                </section>
+            </div>
         </div>
-      </section>
     </main>
-  </div>
 
-  <script src="app.js"></script>
-  <script>
-    // Tab Switching Logic
-    function switchAdminTab(tab) {
-      const isContent = tab === 'content';
-      document.getElementById('pane-content').classList.toggle('hidden', !isContent);
-      document.getElementById('pane-users').classList.toggle('hidden', isContent);
-      document.getElementById('admin-title').innerText = isContent ? "Roadmap Content Management" : "User Access Control";
-      isContent ? renderContent() : renderUsers();
-    }
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
 
-    // --- USER MANAGEMENT LOGIC ---
-    function renderUsers() {
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      const container = document.getElementById('user-table-body');
-      
-      container.innerHTML = users.map(user => `
-        <tr>
-          <td class="p-4 text-sm font-medium">${user.firstName} ${user.lastName}</td>
-          <td class="p-4 text-sm text-gray-600">${user.email}</td>
-          <td class="p-4">
-            <span class="px-2 py-1 rounded text-[10px] font-bold uppercase ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600'}">
-              ${user.role}
-            </span>
-          </td>
-          <td class="p-4 text-right">
-            <button onclick="toggleAdmin('${user.email}')" class="text-xs font-bold text-blue-600 hover:underline mr-3">
-              ${user.role === 'admin' ? 'Demote' : 'Make Admin'}
-            </button>
-            <button onclick="deleteUser('${user.email}')" class="text-xs font-bold text-red-600 hover:underline">Delete</button>
-          </td>
-        </tr>
-      `).join('');
-    }
+        // 1. Refresh Display Stats
+        function refreshStats() {
+            const languages = Object.keys(window.roadmapDatabase).filter(k => k !== 'universal');
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            document.getElementById('stat-lang-count').innerText = languages.length;
+            document.getElementById('stat-user-count').innerText = users.length;
+        }
 
-    window.toggleAdmin = (email) => {
-      let users = JSON.parse(localStorage.getItem('users'));
-      const user = users.find(u => u.email === email);
-      if (user.email === currentUser.email) return alert("You cannot demote yourself!");
-      user.role = user.role === 'admin' ? 'user' : 'admin';
-      localStorage.setItem('users', JSON.stringify(users));
-      renderUsers();
-    };
+        // 2. Handle Form Submission
+        document.getElementById('add-lang-form').addEventListener('submit', (e) => {
+            e.preventDefault();
 
-    window.deleteUser = (email) => {
-      if (confirm("Delete this user? This cannot be undone.")) {
-        let users = JSON.parse(localStorage.getItem('users'));
-        users = users.filter(u => u.email !== email);
-        localStorage.setItem('users', JSON.stringify(users));
-        renderUsers();
-      }
-    };
+            const name = document.getElementById('new-lang-name').value;
+            const track = document.getElementById('new-lang-track').value;
+            const level = document.querySelector('input[name="level"]:checked').value;
+            const topics = document.getElementById('new-lang-topics').value;
+            const tools = document.getElementById('new-lang-tools').value;
 
-    // --- CONTENT MANAGEMENT LOGIC ---
-    function renderContent() {
-      // In a real app, we'd edit the roadmapDatabase. 
-      // For this prototype, we simulate the structure of the languages.
-      const container = document.getElementById('content-list');
-      const langs = Object.keys(roadmapDatabase);
+            // Use the function from app.js
+            window.addNewLanguage(name, track, level, topics, tools);
 
-      container.innerHTML = langs.map(lang => `
-        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-lg capitalize">${lang}</h3>
-            <button onclick="deleteLanguage('${lang}')" class="text-red-500"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
-          </div>
-          <div class="grid grid-cols-3 gap-4">
-            ${['junior', 'mid', 'senior'].map(level => `
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">${level}</p>
-                <ul class="text-xs space-y-1 mb-3">
-                  ${roadmapDatabase[lang][level].topics.slice(0,3).map(t => `<li>• ${t}</li>`).join('')}
-                  <li class="text-gray-400">...</li>
-                </ul>
-                <button onclick="editSection('${lang}', '${level}')" class="text-blue-600 text-[10px] font-bold hover:underline">EDIT PATH</button>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `).join('');
-      lucide.createIcons();
-    }
+            alert(`${name} (${track} - ${level}) has been added to the engine!`);
+            e.target.reset();
+            refreshStats();
+        });
 
-    window.editSection = (lang, level) => {
-      const current = roadmapDatabase[lang][level].topics.join(', ');
-      const newVal = prompt(`Update ${lang} ${level} topics (comma separated):`, current);
-      if (newVal) {
-        roadmapDatabase[lang][level].topics = newVal.split(',').map(s => s.trim());
-        alert("Prototype: Content updated in memory!");
-        renderContent();
-      }
-    };
+        // 3. Reset Database (Maintenance)
+        function resetDB() {
+            if(confirm("CRITICAL ACTION: This will delete all custom languages and reset to factory defaults. Continue?")) {
+                localStorage.removeItem('master_roadmaps');
+                window.location.reload();
+            }
+        }
 
-    window.addPathEntry = () => {
-      const name = prompt("Enter new Language name:");
-      if (name) alert(`Added ${name} to roadmap list!`);
-    };
-
-    // Initial Load
-    window.addEventListener('load', () => {
-      renderContent();
-      lucide.createIcons();
-    });
-  </script>
+        // Init stats on load
+        window.addEventListener('load', refreshStats);
+    </script>
 </body>
 </html>

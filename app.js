@@ -1,9 +1,10 @@
 /**
  * DEVROADMAP CENTRAL ENGINE (app.js) - 2026 Edition
+ * Full Integration: Multi-User Auth + Dynamic Roadmap Injection
  */
 
-// --- 1. MASTER ROADMAP DATABASE ---
-window.roadmapDatabase = {
+// --- 1. INITIAL DATABASE SEED ---
+const initialRoadmapData = {
     "universal": {
         "junior": ["Variables, Loops, Functions", "Data Structures & Algorithms", "Git + GitHub", "CLI Usage", "HTTP Basics (Requests/Headers)"],
         "mid": ["Design Patterns (MVC, Factory)", "System Design Basics", "Unit & Integration Testing", "CI/CD + DevOps Basics"]
@@ -73,18 +74,42 @@ window.roadmapDatabase = {
 };
 
 // --- 2. STORAGE & AUTH ---
-const defaultUsers = [{ email: 'admin@dev.ca', password: 'admin123', role: 'admin', firstName: 'Admin', lastName: 'User' }];
-if (!localStorage.getItem('users')) localStorage.setItem('users', JSON.stringify(defaultUsers));
+const defaultUsers = [
+    { email: 'admin@dev.ca', password: 'admin123', role: 'admin', firstName: 'Admin', lastName: 'User' },
+    { email: 'fadi@dev.ca', password: 'fadi123', role: 'user', firstName: 'Fadi', lastName: 'Dev' },
+    { email: 'becca@dev.ca', password: 'becca123', role: 'user', firstName: 'Becca', lastName: 'Dev' },
+    { email: 'joya@dev.ca', password: 'joya123', role: 'user', firstName: 'Joya', lastName: 'Dev' }
+];
 
-const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-function logout() {
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('selectedPath');
-    window.location.href = 'SignInPage.html';
+// Re-initialize users if the list has changed or is empty
+const storedUsers = JSON.parse(localStorage.getItem('users'));
+if (!storedUsers || storedUsers.length < 4) {
+    localStorage.setItem('users', JSON.stringify(defaultUsers));
 }
 
-// --- 3. PROGRESS ENGINE ---
+// Load Roadmaps (Check LocalStorage first for Admin updates)
+window.roadmapDatabase = JSON.parse(localStorage.getItem('master_roadmaps')) || initialRoadmapData;
+
+// --- 3. DYNAMIC ROADMAP INJECTION (Admin Only) ---
+window.addNewLanguage = (langName, trackName, level, topics, tools) => {
+    const key = langName.toLowerCase().trim();
+    const trackKey = trackName.toLowerCase().trim();
+    const levelKey = level.toLowerCase().trim();
+
+    // Build the structure
+    if (!window.roadmapDatabase[key]) window.roadmapDatabase[key] = {};
+    if (!window.roadmapDatabase[key][trackKey]) window.roadmapDatabase[key][trackKey] = {};
+    
+    window.roadmapDatabase[key][trackKey][levelKey] = {
+        topics: typeof topics === 'string' ? topics.split(',').map(s => s.trim()) : topics,
+        tools: typeof tools === 'string' ? tools.split(',').map(s => s.trim()) : tools
+    };
+
+    // Save globally and locally
+    localStorage.setItem('master_roadmaps', JSON.stringify(window.roadmapDatabase));
+};
+
+// --- 4. PROGRESS ENGINE ---
 function getPathKey() {
     const selection = JSON.parse(localStorage.getItem('selectedPath'));
     if (!selection) return null;
@@ -93,7 +118,10 @@ function getPathKey() {
 
 window.saveProgress = (type, index, isChecked) => {
     const key = getPathKey();
+    if (!key) return;
+    
     let allProgress = JSON.parse(localStorage.getItem(key)) || { universal: [], topics: [], tools: [] };
+    
     if (isChecked) {
         if (!allProgress[type].includes(index)) allProgress[type].push(index);
     } else {
@@ -107,17 +135,28 @@ window.loadProgress = () => {
     return JSON.parse(localStorage.getItem(key)) || { universal: [], topics: [], tools: [] };
 };
 
-// --- 4. GLOBAL LISTENERS ---
+// --- 5. GLOBAL LISTENERS & NAVIGATION ---
+
+// SIGN IN LOGIC
 document.getElementById('signin-form')?.addEventListener('submit', (e) => {
     e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    
     const users = JSON.parse(localStorage.getItem('users'));
-    const user = users.find(u => u.email === e.target.email.value && u.password === e.target.password.value);
+    const user = users.find(u => u.email === email && u.password === password);
+    
     if (user) {
         localStorage.setItem('currentUser', JSON.stringify(user));
         window.location.href = user.role === 'admin' ? 'AdminDashboard.html' : 'DashboardPage.html';
-    } else alert("Invalid credentials");
+    } else {
+        const errorDiv = document.getElementById('login-error');
+        if (errorDiv) errorDiv.classList.remove('hidden');
+        else alert("Invalid credentials provided.");
+    }
 });
 
+// ROADMAP SELECTION LOGIC
 document.getElementById('roadmap-selection-form')?.addEventListener('submit', (e) => {
     e.preventDefault();
     const selection = {
@@ -128,3 +167,10 @@ document.getElementById('roadmap-selection-form')?.addEventListener('submit', (e
     localStorage.setItem('selectedPath', JSON.stringify(selection));
     window.location.href = 'RoadmapPage.html';
 });
+
+// LOGOUT LOGIC
+function logout() {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('selectedPath');
+    window.location.href = 'SignInPage.html';
+}
