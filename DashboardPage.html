@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard - DevRoadmap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 text-slate-900">
+  <nav class="bg-white border-b border-gray-200 p-4 shadow-sm">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <i data-lucide="layout" class="h-6 w-6 text-blue-600"></i>
+        <span class="font-bold text-xl">DevRoadmap</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="ProfilePage.html" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">My Profile</a>
+        <button onclick="logout()" class="bg-red-50 text-red-600 px-4 py-2 rounded-md text-sm font-medium hover:bg-red-100 transition-colors flex items-center gap-2">
+          <i data-lucide="log-out" class="h-4 w-4"></i> Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="min-h-screen py-12 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-8">
+        <h1 class="text-4xl font-bold mb-2">Welcome Back, <span id="user-name">Developer</span>!</h1>
+        <p class="text-gray-600 text-lg">Configure your learning path to see your customized roadmap.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+            <h3 class="font-bold text-xl mb-6 flex items-center gap-2">
+              <i data-lucide="compass" class="h-6 w-6 text-blue-600"></i>
+              Setup Your Learning Path
+            </h3>
+
+            <div class="grid md:grid-cols-1 gap-6">
+              <div class="space-y-2">
+                <label class="text-sm font-semibold">1. Choose Programming Language</label>
+                <select id="lang-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none bg-white">
+                  <option value="python">Python</option>
+                  <option value="javascript">JavaScript / TypeScript</option>
+                  <option value="java">Java</option>
+                  <option value="csharp">C#</option>
+                  <option value="cpp">C++</option>
+                  <option value="go">Go (Golang)</option>
+                </select>
+              </div>
+
+              <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                  <label class="text-sm font-semibold">2. Choose Your Track</label>
+                  <select id="track-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none bg-white">
+                    <option value="frontend">Frontend</option>
+                    <option value="backend">Backend</option>
+                    <option value="fullstack">Full-Stack</option>
+                  </select>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="text-sm font-semibold">3. Seniority Level</label>
+                  <select id="level-select" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none bg-white">
+                    <option value="junior">Junior</option>
+                    <option value="mid">Mid-Level</option>
+                    <option value="senior">Senior</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="pt-4">
+                <button onclick="navigateToRoadmap()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-lg hover:bg-blue-700 transition-all shadow-lg flex items-center justify-center gap-2">
+                  View My Roadmap <i data-lucide="arrow-right" class="h-5 w-5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="bg-blue-600 text-white p-6 rounded-xl shadow-md">
+            <h3 class="font-bold text-lg mb-2">Platform Tip</h3>
+            <p class="text-blue-100 text-sm leading-relaxed">
+              Each roadmap provides a list of necessary IDEs and Libraries. We'll check your local environment and show a <span class="font-bold underline">tick</span> for installed tools.
+            </p>
+          </div>
+
+          <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm">
+            <h3 class="font-semibold mb-4">Quick Links</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href="ProfilePage.html" class="flex items-center gap-3 text-sm text-gray-600 hover:text-blue-600">
+                  <i data-lucide="user-cog" class="h-4 w-4"></i> Profile Settings
+                </a>
+              </li>
+              <li>
+                <a href="AboutPage.html" class="flex items-center gap-3 text-sm text-gray-600 hover:text-blue-600">
+                  <i data-lucide="help-circle" class="h-4 w-4"></i> Help & Documentation
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // On Load: Personalize the Welcome message
+    window.addEventListener('load', () => {
+      const user = JSON.parse(localStorage.getItem('currentUser'));
+      if (user && user.firstName) {
+        document.getElementById('user-name').innerText = user.firstName;
+      }
+    });
+
+    function navigateToRoadmap() {
+      const lang = document.getElementById('lang-select').value;
+      const track = document.getElementById('track-select').value;
+      const level = document.getElementById('level-select').value;
+      
+      // For demo purposes, we save the selection so RoadmapPage can display it
+      localStorage.setItem('selectedPath', JSON.stringify({ lang, track, level }));
+      window.location.href = 'RoadmapPage.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Profile - DevRoadmap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 text-slate-900">
+  <nav class="bg-white border-b border-gray-200 p-4 shadow-sm">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <a href="DashboardPage.html" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors">
+          <i data-lucide="arrow-left" class="h-5 w-5"></i>
+          <span class="font-medium">Back to Dashboard</span>
+        </a>
+      </div>
+      <button onclick="logout()" class="text-sm font-bold text-red-600 hover:underline">Logout</button>
+    </div>
+  </nav>
+
+  <div class="min-h-screen py-12 px-4">
+    <div class="max-w-2xl mx-auto">
+      <div class="mb-8">
+        <h1 class="text-4xl font-bold mb-2">Profile Settings</h1>
+        <p class="text-gray-600">Update your personal information and account security.</p>
+      </div>
+
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-gray-100 bg-gray-50/50">
+          <h3 class="font-bold text-lg">Personal Information</h3>
+          <p class="text-xs text-gray-500">Visible on your roadmap achievements.</p>
+        </div>
+        
+        <div class="p-6">
+          <form id="profile-form" class="space-y-6">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="text-sm font-semibold">First Name</label>
+                <input id="firstName" name="firstName" type="text" required class="w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-600">
+              </div>
+              <div class="space-y-2">
+                <label class="text-sm font-semibold">Last Name</label>
+                <input id="lastName" name="lastName" type="text" required class="w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-600">
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-semibold">Email Address</label>
+              <input id="email" type="email" disabled class="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed">
+              <p class="text-[10px] text-gray-400">Email cannot be changed for the demo.</p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-semibold">Current Job Title</label>
+              <div class="relative">
+                <i data-lucide="briefcase" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+                <input id="jobTitle" name="jobTitle" type="text" placeholder="e.g. Junior Python Developer" class="w-full p-2.5 pl-10 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-600">
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h4 class="font-bold text-sm">Two-Factor Authentication (2FA)</h4>
+                  <p class="text-xs text-gray-500">Enable phone verification for extra security.</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="tfa-toggle" class="sr-only peer">
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+              <div id="phone-input-container" class="hidden space-y-2">
+                <label class="text-sm font-semibold">Phone Number</label>
+                <input id="phone" type="tel" placeholder="+1 (555) 000-0000" class="w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-600">
+              </div>
+            </div>
+
+            <div class="pt-6">
+              <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-md flex items-center justify-center gap-2">
+                <i data-lucide="save" class="h-5 w-5"></i>
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <div class="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg flex gap-3">
+        <i data-lucide="alert-circle" class="h-5 w-5 text-yellow-600 flex-shrink-0"></i>
+        <p class="text-sm text-yellow-800">
+          
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // Toggle phone input based on 2FA switch
+    const tfaToggle = document.getElementById('tfa-toggle');
+    const phoneContainer = document.getElementById('phone-input-container');
+    tfaToggle.addEventListener('change', () => {
+      phoneContainer.classList.toggle('hidden', !tfaToggle.checked);
+    });
+
+    // Populate the form with current user data
+    window.addEventListener('load', () => {
+      const user = JSON.parse(localStorage.getItem('currentUser'));
+      if (user) {
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('firstName').value = user.firstName || '';
+        document.getElementById('lastName').value = user.lastName || '';
+        document.getElementById('jobTitle').value = user.jobTitle || '';
+        
+        if (user.tfaEnabled) {
+          tfaToggle.checked = true;
+          phoneContainer.classList.remove('hidden');
+          document.getElementById('phone').value = user.phone || '';
+        }
+      }
+    });
+
+    // Handle form submission
+    document.getElementById('profile-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = JSON.parse(localStorage.getItem('currentUser'));
+      const users = JSON.parse(localStorage.getItem('users'));
+      
+      // Update object
+      user.firstName = document.getElementById('firstName').value;
+      user.lastName = document.getElementById('lastName').value;
+      user.jobTitle = document.getElementById('jobTitle').value;
+      user.tfaEnabled = tfaToggle.checked;
+      user.phone = document.getElementById('phone').value;
+
+      // Persist to "database"
+      const userIndex = users.findIndex(u => u.email === user.email);
+      users[userIndex] = user;
+      
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify(user));
+
+      alert("Profile updated successfully!");
+    });
+  </script>
+</body>
+</html>

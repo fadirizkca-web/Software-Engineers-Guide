@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - DevRoadmap Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 text-slate-900">
+  <div class="min-h-screen flex items-center justify-center py-12 px-4">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm w-full max-w-md">
+      <div class="p-6 flex flex-col space-y-1 text-center">
+        <div class="flex justify-center mb-2">
+          <i data-lucide="map" class="h-10 w-10 text-blue-600"></i>
+        </div>
+        <h3 class="font-bold text-2xl tracking-tight">Welcome Back</h3>
+        <p class="text-sm text-gray-500">Sign in to access your personalized learning roadmap</p>
+      </div>
+
+      <div class="p-6 pt-0">
+        <form id="signin-form" class="space-y-4">
+          <div class="space-y-2">
+            <label for="email" class="text-sm font-medium">Email Address</label>
+            <div class="relative">
+              <i data-lucide="mail" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+              <input 
+                id="email" 
+                name="email" 
+                type="email" 
+                placeholder="Enter your email" 
+                required 
+                class="w-full rounded-md border border-gray-300 px-3 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+              >
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="password" class="text-sm font-medium">Password</label>
+              <a href="#" class="text-xs text-blue-600 hover:underline">Forgot password?</a>
+            </div>
+            <div class="relative">
+              <i data-lucide="lock" class="absolute left-3 top-3 h-4 w-4 text-gray-400"></i>
+              <input 
+                id="password" 
+                name="password" 
+                type="password" 
+                placeholder="••••••••" 
+                required 
+                class="w-full rounded-md border border-gray-300 px-3 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+              >
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-blue-600 text-white rounded-md h-10 font-medium hover:bg-blue-700 transition-colors shadow-sm">
+            Sign In
+          </button>
+        </form>
+
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center">
+            <span class="w-full border-t border-gray-200"></span>
+          </div>
+          <div class="relative flex justify-center text-xs uppercase">
+            <span class="bg-white px-2 text-gray-500 font-medium">Or continue with</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <button onclick="alert('Redirecting to Google OAuth...')" type="button" class="flex items-center justify-center rounded-md border border-gray-200 py-2 text-sm font-medium hover:bg-gray-50 transition-colors">
+            <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" class="h-4 w-4 mr-2" alt="Google">
+            Google
+          </button>
+          <button onclick="alert('Redirecting to Outlook OAuth...')" type="button" class="flex items-center justify-center rounded-md border border-gray-200 py-2 text-sm font-medium hover:bg-gray-50 transition-colors">
+            <i data-lucide="mail" class="h-4 w-4 mr-2 text-blue-500"></i>
+            Outlook
+          </button>
+        </div>
+
+        <p class="mt-8 text-center text-sm text-gray-600">
+          Don't have an account? 
+          <a href="SignUpPage.html" class="text-blue-600 font-bold hover:underline">Sign Up</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    lucide.createIcons();
+
+    window.addEventListener('load', () => {
+      const user = JSON.parse(localStorage.getItem('currentUser'));
+      if (user) {
+        window.location.href = user.role === 'admin' ? 'AdminDashboard.html' : 'DashboardPage.html';
+      }
+    });
+  </script>
+</body>
+</html>

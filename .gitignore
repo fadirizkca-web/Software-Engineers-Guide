@@ -1,0 +1,22 @@
+# OS Metadata
+.DS_Store
+Thumbs.db
+
+# IDE Settings
+.vscode/
+.idea/
+*.swp
+
+# Local Environment
+.env
+.env.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node Modules (if you eventually use npm)
+node_modules/
+dist/
+build/

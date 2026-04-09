@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found | DevRoadmap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 text-slate-900">
+  <div class="min-h-screen flex items-center justify-center px-4">
+    <div class="max-w-md w-full text-center">
+      <div class="mb-8 flex justify-center">
+        <div class="relative">
+          <i data-lucide="map" class="h-24 w-24 text-gray-200"></i>
+          <i data-lucide="search-x" class="h-12 w-12 text-blue-600 absolute bottom-0 right-0 bg-gray-50 rounded-full p-1"></i>
+        </div>
+      </div>
+
+      <h1 class="text-9xl font-black text-blue-600 tracking-tighter mb-2">404</h1>
+      <h2 class="text-3xl font-bold text-slate-900 mb-4">You've reached a dead end</h2>
+      
+      <p class="text-gray-600 mb-8 leading-relaxed">
+        The page you are looking for doesn't exist, or you may not have the necessary permissions to view this content (Role-Based Access).
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="index.html" class="inline-flex items-center justify-center rounded-lg bg-blue-600 text-white px-6 py-3 font-bold hover:bg-blue-700 transition-all shadow-md group">
+          <i data-lucide="home" class="mr-2 h-5 w-5 group-hover:-translate-y-0.5 transition-transform"></i>
+          Return Home
+        </a>
+        
+        <button onclick="window.history.back()" class="inline-flex items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-700 px-6 py-3 font-bold hover:bg-gray-50 transition-all">
+          <i data-lucide="arrow-left" class="mr-2 h-5 w-5"></i>
+          Go Back
+        </button>
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-gray-200">
+        <p class="text-xs text-gray-400 uppercase tracking-widest font-semibold">
+          Software Engineering Guide Demo
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // Verification if the user is redirected here due to a 403 (Story 5)
+    window.addEventListener('load', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('forbidden')) {
+        document.querySelector('h2').innerText = "403 Forbidden";
+        document.querySelector('p').innerText = "You do not have the Admin privileges required to access this dashboard.";
+      }
+    });
+  </script>
+</body>
+</html>

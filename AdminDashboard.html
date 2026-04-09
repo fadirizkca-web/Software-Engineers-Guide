@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - DevRoadmap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 text-slate-900">
+  <div class="min-h-screen flex">
+    
+    <aside class="w-64 bg-slate-900 text-white p-6 hidden md:block">
+      <div class="flex items-center gap-2 mb-10">
+        <i data-lucide="shield-check" class="text-blue-400"></i>
+        <span class="font-bold text-xl">Admin Control</span>
+      </div>
+      <nav class="space-y-4">
+        <button onclick="switchAdminTab('content')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-2">
+          <i data-lucide="book-open" class="h-4 w-4"></i> Roadmap Content
+        </button>
+        <button onclick="switchAdminTab('users')" class="w-full text-left p-3 rounded hover:bg-slate-800 flex items-center gap-2">
+          <i data-lucide="users" class="h-4 w-4"></i> User Management
+        </button>
+        <hr class="border-slate-800">
+        <button onclick="logout()" class="w-full text-left p-3 rounded text-red-400 hover:bg-red-900/20 flex items-center gap-2">
+          <i data-lucide="log-out" class="h-4 w-4"></i> Logout
+        </button>
+      </nav>
+    </aside>
+
+    <main class="flex-1 p-8 overflow-y-auto">
+      <header class="flex justify-between items-center mb-8">
+        <h1 id="admin-title" class="text-2xl font-bold">Roadmap Content Management</h1>
+        <button onclick="location.reload()" class="p-2 bg-white border rounded shadow-sm hover:bg-gray-50">
+          <i data-lucide="refresh-cw" class="h-4 w-4"></i>
+        </button>
+      </header>
+
+      <section id="pane-content" class="space-y-6">
+        <div class="bg-blue-600 text-white p-4 rounded-lg flex justify-between items-center">
+          <p class="text-sm font-medium">Add a new skill or tool to the global database.</p>
+          <button onclick="addPathEntry()" class="bg-white text-blue-600 px-4 py-2 rounded-md font-bold text-sm">
+            + Add New Entry
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4" id="content-list">
+          </div>
+      </section>
+
+      <section id="pane-users" class="hidden space-y-6">
+        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+          <table class="w-full text-left">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="p-4 text-xs font-bold uppercase text-gray-500">Name</th>
+                <th class="p-4 text-xs font-bold uppercase text-gray-500">Email</th>
+                <th class="p-4 text-xs font-bold uppercase text-gray-500">Role</th>
+                <th class="p-4 text-xs font-bold uppercase text-gray-500 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="user-table-body" class="divide-y divide-gray-100">
+              </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Tab Switching Logic
+    function switchAdminTab(tab) {
+      const isContent = tab === 'content';
+      document.getElementById('pane-content').classList.toggle('hidden', !isContent);
+      document.getElementById('pane-users').classList.toggle('hidden', isContent);
+      document.getElementById('admin-title').innerText = isContent ? "Roadmap Content Management" : "User Access Control";
+      isContent ? renderContent() : renderUsers();
+    }
+
+    // --- USER MANAGEMENT LOGIC ---
+    function renderUsers() {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const container = document.getElementById('user-table-body');
+      
+      container.innerHTML = users.map(user => `
+        <tr>
+          <td class="p-4 text-sm font-medium">${user.firstName} ${user.lastName}</td>
+          <td class="p-4 text-sm text-gray-600">${user.email}</td>
+          <td class="p-4">
+            <span class="px-2 py-1 rounded text-[10px] font-bold uppercase ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600'}">
+              ${user.role}
+            </span>
+          </td>
+          <td class="p-4 text-right">
+            <button onclick="toggleAdmin('${user.email}')" class="text-xs font-bold text-blue-600 hover:underline mr-3">
+              ${user.role === 'admin' ? 'Demote' : 'Make Admin'}
+            </button>
+            <button onclick="deleteUser('${user.email}')" class="text-xs font-bold text-red-600 hover:underline">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.toggleAdmin = (email) => {
+      let users = JSON.parse(localStorage.getItem('users'));
+      const user = users.find(u => u.email === email);
+      if (user.email === currentUser.email) return alert("You cannot demote yourself!");
+      user.role = user.role === 'admin' ? 'user' : 'admin';
+      localStorage.setItem('users', JSON.stringify(users));
+      renderUsers();
+    };
+
+    window.deleteUser = (email) => {
+      if (confirm("Delete this user? This cannot be undone.")) {
+        let users = JSON.parse(localStorage.getItem('users'));
+        users = users.filter(u => u.email !== email);
+        localStorage.setItem('users', JSON.stringify(users));
+        renderUsers();
+      }
+    };
+
+    // --- CONTENT MANAGEMENT LOGIC ---
+    function renderContent() {
+      // In a real app, we'd edit the roadmapDatabase. 
+      // For this prototype, we simulate the structure of the languages.
+      const container = document.getElementById('content-list');
+      const langs = Object.keys(roadmapDatabase);
+
+      container.innerHTML = langs.map(lang => `
+        <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-lg capitalize">${lang}</h3>
+            <button onclick="deleteLanguage('${lang}')" class="text-red-500"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+          </div>
+          <div class="grid grid-cols-3 gap-4">
+            ${['junior', 'mid', 'senior'].map(level => `
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">${level}</p>
+                <ul class="text-xs space-y-1 mb-3">
+                  ${roadmapDatabase[lang][level].topics.slice(0,3).map(t => `<li>• ${t}</li>`).join('')}
+                  <li class="text-gray-400">...</li>
+                </ul>
+                <button onclick="editSection('${lang}', '${level}')" class="text-blue-600 text-[10px] font-bold hover:underline">EDIT PATH</button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    window.editSection = (lang, level) => {
+      const current = roadmapDatabase[lang][level].topics.join(', ');
+      const newVal = prompt(`Update ${lang} ${level} topics (comma separated):`, current);
+      if (newVal) {
+        roadmapDatabase[lang][level].topics = newVal.split(',').map(s => s.trim());
+        alert("Prototype: Content updated in memory!");
+        renderContent();
+      }
+    };
+
+    window.addPathEntry = () => {
+      const name = prompt("Enter new Language name:");
+      if (name) alert(`Added ${name} to roadmap list!`);
+    };
+
+    // Initial Load
+    window.addEventListener('load', () => {
+      renderContent();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

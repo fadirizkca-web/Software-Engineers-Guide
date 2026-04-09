@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - DevRoadmap Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-white text-slate-900">
+  <nav class="bg-blue-600 p-4 text-white">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <a href="index.html" class="font-bold text-xl">DevRoadmap</a>
+      <div class="space-x-4">
+        <a href="index.html" class="hover:underline">Home</a>
+        <a href="SignInPage.html" class="hover:underline">Sign In</a>
+        <a href="SignUpPage.html" class="bg-white text-blue-600 px-4 py-2 rounded font-medium">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="min-h-screen py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold mb-4">About DevRoadmap Guide</h1>
+        <p class="text-xl text-gray-600">Your comprehensive platform for software engineering career development</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 mb-12">
+        <div class="p-6 border rounded-xl text-center">
+          <i data-lucide="award" class="h-10 w-10 text-blue-600 mx-auto mb-4"></i>
+          <h3 class="font-bold">Junior</h3>
+          <p class="text-sm text-gray-500">Core basics and tool setup</p>
+        </div>
+        <div class="p-6 border rounded-xl text-center">
+          <i data-lucide="zap" class="h-10 w-10 text-blue-600 mx-auto mb-4"></i>
+          <h3 class="font-bold">Mid-Level</h3>
+          <p class="text-sm text-gray-500">Architecture and advanced libraries</p>
+        </div>
+        <div class="p-6 border rounded-xl text-center">
+          <i data-lucide="crown" class="h-10 w-10 text-blue-600 mx-auto mb-4"></i>
+          <h3 class="font-bold">Senior</h3>
+          <p class="text-sm text-gray-500">Scalability and leadership tools</p>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 p-8 rounded-xl">
+        <h2 class="text-2xl font-bold mb-4">Security Requirements</h2>
+        <ul class="list-disc ml-6 space-y-2 text-gray-700">
+          <li><strong>Role-Based Access:</strong> Separate views for Visitors, Registered Users, and Admins.</li>
+          <li><strong>Email Verification:</strong> All standard signups require email confirmation.</li>
+          <li><strong>Two-Factor Authentication:</strong> Secure your account with mobile phone verification.</li>
+          <li><strong>Password Standards:</strong> Strictly no spaces; mixed characters required for "Strong" rating.</li>
+        </ul>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="SignUpPage.html" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700">Start Your Roadmap Today</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

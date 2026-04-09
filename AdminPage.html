@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Management - Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 text-slate-900">
+  <nav class="bg-slate-900 p-4 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <a href="AdminDashboard.html" class="flex items-center gap-2 hover:text-blue-400 transition-colors">
+          <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
+          <span class="font-bold">Dashboard</span>
+        </a>
+        <span class="text-slate-600">|</span>
+        <span class="text-blue-400 font-medium">Roadmap Editor</span>
+      </div>
+      <button onclick="logout()" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+        <i data-lucide="log-out" class="h-4 w-4"></i> Logout
+      </button>
+    </div>
+  </nav>
+
+  <div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+          <h1 class="text-3xl font-bold">Manage Roadmaps</h1>
+          <p class="text-gray-600">Create, edit, and update language study paths (Story 1 & 2)</p>
+        </div>
+        <button onclick="alert('Feature: Add New Roadmap form would open here.')" class="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700 flex items-center justify-center gap-2 shadow-md">
+          <i data-lucide="plus-circle" class="h-5 w-5"></i> Add New Content
+        </button>
+      </div>
+
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="px-6 py-4 text-sm font-semibold text-gray-700 uppercase tracking-wider">Language</th>
+                <th class="px-6 py-4 text-sm font-semibold text-gray-700 uppercase tracking-wider">Track</th>
+                <th class="px-6 py-4 text-sm font-semibold text-gray-700 uppercase tracking-wider">Level</th>
+                <th class="px-6 py-4 text-sm font-semibold text-gray-700 uppercase tracking-wider">Required Tools</th>
+                <th class="px-6 py-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="roadmap-list" class="divide-y divide-gray-100">
+              <tr>
+                <td colspan="5" class="px-6 py-10 text-center text-gray-400">
+                  <div class="flex flex-col items-center gap-2">
+                    <i data-lucide="loader-2" class="h-8 w-8 animate-spin"></i>
+                    <p>Loading roadmap database...</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mt-6 flex items-center gap-2 text-sm text-gray-500 bg-blue-50 p-4 rounded-lg border border-blue-100">
+        <i data-lucide="info" class="h-4 w-4 text-blue-600"></i>
+        <p><strong>Admin Tip:</strong> Updates made here are reflected immediately across all registered user dashboards.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Specific AdminPage Table Rendering Override
+    // This allows the AdminPage to use a Table layout while sharing the same app.js data
+    function renderRoadmapTable() {
+      const roadmapList = document.getElementById('roadmap-list');
+      const roadmaps = JSON.parse(localStorage.getItem('roadmaps')) || [];
+
+      if (roadmaps.length === 0) {
+        roadmapList.innerHTML = '<tr><td colspan="5" class="px-6 py-10 text-center">No roadmaps found. Add one to get started.</td></tr>';
+        return;
+      }
+
+      roadmapList.innerHTML = roadmaps.map(rm => `
+        <tr class="hover:bg-gray-50 transition-colors">
+          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">${rm.lang}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              ${rm.track}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-gray-600">${rm.level}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${rm.tools ? rm.tools.length : 0} Must-have tools
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <button onclick="editRm(${rm.id})" class="text-blue-600 hover:text-blue-900 mr-4 inline-flex items-center gap-1">
+              <i data-lucide="edit-3" class="h-4 w-4"></i> Edit
+            </button>
+            <button onclick="deleteRm(${rm.id})" class="text-red-600 hover:text-red-900 inline-flex items-center gap-1">
+              <i data-lucide="trash-2" class="h-4 w-4"></i> Delete
+            </button>
+          </td>
+        </tr>
+      `).join('');
+      
+      lucide.createIcons();
+    }
+
+    // Run custom table render on load
+    window.addEventListener('load', renderRoadmapTable);
+  </script>
+</body>
+</html>
