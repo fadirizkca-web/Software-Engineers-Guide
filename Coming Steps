@@ -1,0 +1,2 @@
+Repropduce the backend
+Future development cycles will prioritize transitioning from a Local-Storage-based prototype to a cloud-synchronized platform. Key focus areas include implementing a robust SQL/NoSQL backend for multi-device synchronization, introducing gamification elements to increase user retention, and eventually leveraging AI to provide adaptive learning paths based on real-time skill assessments.
